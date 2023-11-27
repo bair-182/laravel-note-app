@@ -1,0 +1,77 @@
+version: "3.7"
+
+services:
+    app:
+        build:
+            args:
+                user: bair182
+                uid: 1000
+            context: ./
+            dockerfile: Dockerfile
+        restart: unless-stopped
+        working_dir: /var/www/
+        volumes:
+            - ./:/var/www
+            - /var/lib/
+        networks:
+            - app-network
+
+    db:
+        image: mysql:latest
+        command: --default-authentication-plugin=mysql_native_password
+        restart: always
+        environment:
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            MYSQL_USER: ${DB_USERNAME}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+            SERVICE_TAGS: dev
+            SERVICE_NAME: mysql
+        ports:
+            - "3306:3306"
+        volumes:
+            - ./docker-compose/mysql:/docker-entrypoint-initdb.d
+        networks:
+            - app-network
+
+    phpmyadmin:
+        image: phpmyadmin
+        restart: always
+        ports:
+            - "8081:80"
+        environment:
+            - PMA_HOST=localhost
+            - PMA_PORT=3306
+        networks:
+            - app-network
+
+    nginx:
+        image: nginx:1.25-alpine
+        restart: always
+        ports:
+            - "8000:80"
+        volumes:
+            - ./:/var/www
+            - ./docker-compose/nginx:/etc/nginx/conf.d
+        networks:
+            - app-network
+
+    rabbitmq:
+        image: rabbitmq:3-management-alpine
+        container_name: 'rabbitmq'
+        restart: always
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+        environment:
+            RABBITMQ_DEFAULT_USER: "guest"
+            RABBITMQ_DEFAULT_PASSWORD: "guest"
+        volumes:
+            - ./docker-compose/rabbitmq/data/:/var/lib/rabbitmq/
+            - ./docker-compose/rabbitmq/log/:/var/log/rabbitmq
+        networks:
+            - app-network
+
+networks:
+    app-network:
+        driver: bridge
