@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Auth;
 class NoteController extends Controller
 {
 
-
     /** Просмотр заметок.
      *
      * Каждый пользователь имеет доступ только к своим заметкам. Администратор – ко всем

@@ -23,7 +23,7 @@ class NoteService
      *
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection|null
      */
-    public function index()
+    public function index(): ?\Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
         DB::beginTransaction();
         try {
