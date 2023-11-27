@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\NoteRequest;
 use App\Http\Resources\NoteResource;
 use App\Jobs\SendEmailJob;
-use App\Jobs\SendJob;
 use App\Models\Note;
 use App\Services\NoteService;
 use Illuminate\Http\JsonResponse;
@@ -25,28 +24,8 @@ class NoteController extends Controller
      */
     public function index(): JsonResponse|NoteResource|Note|AnonymousResourceCollection
     {
-        $user = Auth::user();
-        if ($this->isAuthorized() && $this->isAdmin()) {
-            $data = NoteResource::collection(Note::with(
-                'fields.fieldString',
-                'fields.fieldInt',
-                'fields.fieldFloat',
-                'fields.fieldBool')
-                ->get()
-            );
-        } elseif ($this->isAuthorized() && !$this->isAdmin()) {
-            $data = NoteResource::collection(Note::where('user_id', $user->id)
-                ->with(
-                    'fields.fieldString',
-                    'fields.fieldInt',
-                    'fields.fieldFloat',
-                    'fields.fieldBool')
-                ->get()
-            );
-        } else {
-            $data = response()->json('Unauthorized user', 401);
-        }
-        return $data;
+        $noteService = new NoteService();
+        return $noteService->index();
     }
 
 
@@ -105,25 +84,4 @@ class NoteController extends Controller
         }
     }
 
-
-    /** Проверка на права администратора.
-     *
-     * @return bool
-     */
-    private function isAdmin(): bool
-    {
-        return Auth::user()->role === 'admin';
-    }
-
-
-    /** Проверка авторизации.
-     *
-     * Реализовано с Laravel Passport
-     *
-     * @return bool
-     */
-    private function isAuthorized(): bool
-    {
-        return Auth::check();
-    }
 }

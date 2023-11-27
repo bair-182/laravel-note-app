@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Config;
 
 /**
  * @property mixed $created_at
@@ -12,11 +13,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
  */
 class FieldResource extends JsonResource
 {
-    const TYPE_STRING = 'string';
-    const TYPE_FLOAT = 'float';
-    const TYPE_INT = 'integer';
-    const TYPE_BOOLEAN = 'boolean';
-
 
     /**
      * Transform the resource into an array.
@@ -35,16 +31,16 @@ class FieldResource extends JsonResource
         ];
 
         switch ($this->type){
-            case self::TYPE_STRING:
+            case Config::get('constants.type.STRING'):
                 $arrayData['value'] = $this->fieldString->value ?? null;
                 break;
-            case self::TYPE_INT:
+            case Config::get('constants.type.INTEGER'):
                 $arrayData['value'] = $this->fieldInt->value ?? null;
                 break;
-            case self::TYPE_FLOAT:
+            case Config::get('constants.type.FLOAT'):
                 $arrayData['value'] = $this->fieldFloat->value ?? null;
                 break;
-            case self::TYPE_BOOLEAN:
+            case Config::get('constants.type.BOOLEAN'):
                 $arrayData['value'] = $this->fieldBool->value ?? null;
                 break;
         }
