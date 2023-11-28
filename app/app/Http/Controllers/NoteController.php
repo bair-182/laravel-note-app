@@ -58,11 +58,11 @@ class NoteController extends Controller
      * асинхронно отправляет уведомление администратору по почте
      *
      * @param NoteRequest $request
+     * @param NoteService $noteService
      * @return JsonResponse
      */
-    public function store(NoteRequest $request): JsonResponse
+    public function store(NoteRequest $request, NoteService $noteService): JsonResponse
     {
-        $noteService = new NoteService();
         $newNote = $noteService->create($request->all());
 
         if (isset($newNote)) {
@@ -77,13 +77,12 @@ class NoteController extends Controller
      *
      * @param NoteRequest $request
      * @param int $noteId
+     * @param NoteService $noteService
      * @return JsonResponse
      */
-    public function update(NoteRequest $request, int $noteId): JsonResponse
+    public function update(NoteRequest $request, int $noteId, NoteService $noteService): JsonResponse
     {
         $note = Note::where('id', $noteId)->first();
-
-        $noteService = new NoteService();
         $updatedNote = $noteService->update($note, $request);
 
         if (isset($updatedNote)) {

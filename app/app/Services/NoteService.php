@@ -67,8 +67,8 @@ class NoteService
 
     /** Обновление заметки.
      *
-     * @param Note $note
-     * @param NoteRequest $data
+     * @param Note $note объект обновляемой заметки из базы данных.
+     * @param NoteRequest $data объект с новыми данными
      * @return Note|null
      */
     public function update(Note $note, NoteRequest $data): ?Note
