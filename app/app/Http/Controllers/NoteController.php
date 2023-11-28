@@ -82,7 +82,13 @@ class NoteController extends Controller
      */
     public function update(NoteRequest $request, int $noteId, NoteService $noteService): JsonResponse
     {
+        $userId = Auth::user()->id;
         $note = Note::where('id', $noteId)->first();
+
+        if (!$userId === $note->user_id) {
+            return response()->json(['error' => 'Не хватает прав для редактирования этой заметки.'], 403);
+        }
+
         $updatedNote = $noteService->update($note, $request);
 
         if (isset($updatedNote)) {
