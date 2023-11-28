@@ -34,6 +34,7 @@ class NoteController extends Controller
                 'fields.fieldInt',
                 'fields.fieldFloat',
                 'fields.fieldBool')
+                ->orderBy('id', 'DESC')
                 ->get()
             );
         } elseif (Auth::user()->role === User::ROLE_USER) {
@@ -43,7 +44,9 @@ class NoteController extends Controller
                     'fields.fieldInt',
                     'fields.fieldFloat',
                     'fields.fieldBool')
+                ->orderBy('id', 'DESC')
                 ->get()
+
             );
         }
         return response()->json(['data' => $data], 200);

@@ -14,3 +14,5 @@ yarn-error.log
 /.idea
 /.vscode
 docker-compose/rabbitmq/data/.erlang.cookie
+/vendor.zip
+/vendor2.zip
