@@ -8,9 +8,7 @@ use App\Jobs\SendEmailJob;
 use App\Models\Note;
 use App\Models\User;
 use App\Services\NoteService;
-use http\Env\Response;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -85,8 +83,8 @@ class NoteController extends Controller
         $userId = Auth::user()->id;
         $note = Note::where('id', $noteId)->first();
 
-        if (!$userId === $note->user_id) {
-            return response()->json(['error' => 'Не хватает прав для редактирования этой заметки.'], 403);
+        if ($userId !== $note->user_id) {
+            return response()->json(['error' => 'Not enough rights to edit this note'], 403);
         }
 
         $updatedNote = $noteService->update($note, $request);
@@ -107,10 +105,10 @@ class NoteController extends Controller
     {
         $note = Note::find($noteId);
         if (!$note) {
-            return response()->json(['error' => 'Заметки с таким ID не найдено.'], 404);
+            return response()->json(['error' => 'No notes with this ID were found.'], 404);
         }
         if ($note->user_id !== Auth::user()->id) {
-            return response()->json(['error' => 'Не хватает прав для удаления этой заметки.'], 403);
+            return response()->json(['error' => 'There are not enough rights to delete this note.'], 403);
         }
         $note->delete();
         return response()->json(['message' => 'Note is deleted.'], 201);

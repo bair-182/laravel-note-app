@@ -3,17 +3,11 @@
 namespace App\Services;
 
 use App\Http\Requests\NoteRequest;
-use App\Http\Resources\NoteResource;
-use App\Jobs\SendEmailJob;
 use App\Models\Field;
-use App\Models\FieldString;
 use App\Models\Note;
-
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use PhpParser\Builder;
 
 
 class NoteService
@@ -56,7 +50,7 @@ class NoteService
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Ошибка создания заметки', [
+            Log::error('Error creating a note', [
                 'error-message' => $e->getMessage(),
                 'note-data' => $data,
             ]);
@@ -105,7 +99,7 @@ class NoteService
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Ошибка обновления заметки', [
+            Log::error('Note update error', [
                 'error-message' => $e->getMessage(),
             ]);
             return null;
