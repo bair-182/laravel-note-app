@@ -21,5 +21,5 @@
 ### 5. Swagger.
 http://localhost:8000/api/documentation
 
-### 5. Импорт файл для Postman в папке проекта:
+### 6. Импорт файл для Postman в папке проекта:
 `Soft-engin-test.postman_collection.json`
