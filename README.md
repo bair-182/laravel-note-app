@@ -18,5 +18,8 @@
 - `php artisan rabbitmq:queue-declare default`
 - `php artisan queue:restart`
 - `php artisan rabbitmq:consume`
+### 5. Swagger.
+http://localhost:8000/api/documentation
+
 ### 5. Импорт файл для Postman в папке проекта:
 `Soft-engin-test.postman_collection.json`
