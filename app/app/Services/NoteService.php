@@ -17,49 +17,6 @@ use Illuminate\Support\Facades\Log;
 class NoteService
 {
 
-    /** Просмотр заметок.
-     *
-     * Каждый пользователь имеет доступ только к своим заметкам. Администратор – ко всем
-     *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection|null
-     */
-    public function index(): ?\Illuminate\Http\Resources\Json\AnonymousResourceCollection
-    {
-        DB::beginTransaction();
-        try {
-            $user = Auth::user();
-            if (Auth::check() && Auth::user()->role === 'admin') {
-                $data = NoteResource::collection(Note::with(
-                    'fields.fieldString',
-                    'fields.fieldInt',
-                    'fields.fieldFloat',
-                    'fields.fieldBool')
-                    ->get()
-                );
-            } elseif (Auth::check() && Auth::user()->role !== 'admin') {
-                $data = NoteResource::collection(Note::where('user_id', $user->id)
-                    ->with(
-                        'fields.fieldString',
-                        'fields.fieldInt',
-                        'fields.fieldFloat',
-                        'fields.fieldBool')
-                    ->get()
-                );
-            }
-
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('Ошибка создания заметки', [
-                'error-message' => $e->getMessage(),
-                'note-data' => $data,
-            ]);
-            return null;
-        }
-        return $data;
-    }
-
-
     /** Создание Заметки.
      *
      * @param array $data принимает массив с полями для создания заметки.
@@ -67,7 +24,6 @@ class NoteService
      */
     public function create(array $data): ?Note
     {
-        //var_dump($data);
         DB::beginTransaction();
         try {
             $note = Note::create([
@@ -81,16 +37,16 @@ class NoteService
                     'note_id' => $note->id
                 ]);
                 switch ($newField['type']) {
-                    case Config::get('constants.type.STRING'):
+                    case Field::TYPE_STRING:
                         $newField->fieldString()->create(['value' => $field['value']]);
                         break;
-                    case Config::get('constants.type.INTEGER'):
+                    case Field::TYPE_INTEGER:
                         $newField->fieldInt()->create(['value' => $field['value']]);
                         break;
-                    case Config::get('constants.type.FLOAT'):
+                    case Field::TYPE_FLOAT:
                         $newField->fieldFloat()->create(['value' => $field['value']]);
                         break;
-                    case Config::get('constants.type.BOOLEAN'):
+                    case Field::TYPE_BOOLEAN:
                         $newField->fieldBool()->create(['value' => $field['value']]);
                         break;
                 }
@@ -156,20 +112,4 @@ class NoteService
         return $note;
     }
 
-    public function delete(int $id): bool|\Illuminate\Http\JsonResponse
-    {
-        try {
-            $note = Note::findOrFail($id);
-            if (!$note) {
-                return response()->json(['error' => 'Заметки с таким ID не найдено.'], 404);
-            }
-            if ($note->user_id !== Auth::user()->id) {
-                return response()->json(['error' => 'У вас не хватает прав для удаления этой заметки.'], 403);
-            }
-            $note->delete();
-            return true;
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    }
 }

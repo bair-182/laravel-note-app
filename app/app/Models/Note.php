@@ -16,6 +16,8 @@ class Note extends Model
     use HasFactory;
     public $timestamps = false;
 
+
+
     protected $table = 'notes';
 
     protected $fillable = [

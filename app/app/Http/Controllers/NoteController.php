@@ -6,7 +6,9 @@ use App\Http\Requests\NoteRequest;
 use App\Http\Resources\NoteResource;
 use App\Jobs\SendEmailJob;
 use App\Models\Note;
+use App\Models\User;
 use App\Services\NoteService;
+use http\Env\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
@@ -19,12 +21,34 @@ class NoteController extends Controller
      *
      * Каждый пользователь имеет доступ только к своим заметкам. Администратор – ко всем
      *
-     * @return JsonResponse|NoteResource|Note|AnonymousResourceCollection
+     * @return JsonResponse
      */
-    public function index(): JsonResponse|NoteResource|Note|AnonymousResourceCollection
+    public function index(): JsonResponse
     {
-        $noteService = new NoteService();
-        return $noteService->index();
+        if (!Auth::check()) {
+            return response()->json(['message' => 'Not authorized'], 401);
+        }
+
+        $user = Auth::user();
+        if (Auth::user()->role === User::ROLE_ADMIN) {
+            $data = NoteResource::collection(Note::with(
+                'fields.fieldString',
+                'fields.fieldInt',
+                'fields.fieldFloat',
+                'fields.fieldBool')
+                ->get()
+            );
+        } elseif (Auth::user()->role === User::ROLE_USER) {
+            $data = NoteResource::collection(Note::where('user_id', $user->id)
+                ->with(
+                    'fields.fieldString',
+                    'fields.fieldInt',
+                    'fields.fieldFloat',
+                    'fields.fieldBool')
+                ->get()
+            );
+        }
+        return response()->json(['data' => $data], 200);
     }
 
 
@@ -73,14 +97,15 @@ class NoteController extends Controller
      */
     public function delete(int $noteId): JsonResponse
     {
-        $noteService = new NoteService();
-        $isDeletedNote = $noteService->delete($noteId);
-
-        if ($isDeletedNote === true) {
-            return response()->json(['message' => 'Note is deleted.'], 201);
-        } else {
-            return $isDeletedNote;
+        $note = Note::find($noteId);
+        if (!$note) {
+            return response()->json(['error' => 'Заметки с таким ID не найдено.'], 404);
         }
+        if ($note->user_id !== Auth::user()->id) {
+            return response()->json(['error' => 'У вас не хватает прав для удаления этой заметки.'], 403);
+        }
+        $note->delete();
+        return response()->json(['message' => 'Note is deleted.'], 201);
     }
 
 }

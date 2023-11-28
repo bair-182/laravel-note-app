@@ -13,7 +13,15 @@ use Illuminate\Database\Eloquent\Model;
 class Field extends Model
 {
     use HasFactory;
+
+    public const TYPE_STRING = 'string';
+
+    public const TYPE_INTEGER = 'integer';
+    public const TYPE_FLOAT = 'float';
+    public const TYPE_BOOLEAN = 'boolean';
+
     public $timestamps = false;
+
 
     protected $table = 'fields';
 
