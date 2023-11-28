@@ -76,12 +76,15 @@ class NoteController extends Controller
     /** Обновление заметки
      *
      * @param NoteRequest $request
+     * @param int $noteId
      * @return JsonResponse
      */
-    public function update(NoteRequest $request): JsonResponse
+    public function update(NoteRequest $request, int $noteId): JsonResponse
     {
+        $note = Note::where('id', $noteId)->first();
+
         $noteService = new NoteService();
-        $updatedNote = $noteService->update($request->all());
+        $updatedNote = $noteService->update($note, $request);
 
         if (isset($updatedNote)) {
             return response()->json(['message' => 'Note is updated.'], 201);
@@ -102,7 +105,7 @@ class NoteController extends Controller
             return response()->json(['error' => 'Заметки с таким ID не найдено.'], 404);
         }
         if ($note->user_id !== Auth::user()->id) {
-            return response()->json(['error' => 'У вас не хватает прав для удаления этой заметки.'], 403);
+            return response()->json(['error' => 'Не хватает прав для удаления этой заметки.'], 403);
         }
         $note->delete();
         return response()->json(['message' => 'Note is deleted.'], 201);

@@ -24,7 +24,7 @@ Route::controller(AuthController::class)->group(function () {
 Route::middleware('auth:api')->group(function (){
     Route::post('notes', [\App\Http\Controllers\NoteController::class, 'store']);
     Route::get('notes', [\App\Http\Controllers\NoteController::class, 'index']);
-    Route::put('notes', [\App\Http\Controllers\NoteController::class, 'update']);
+    Route::put('notes/{id}', [\App\Http\Controllers\NoteController::class, 'update']);
     Route::delete('notes/{id}', [\App\Http\Controllers\NoteController::class, 'delete']);
 });
 

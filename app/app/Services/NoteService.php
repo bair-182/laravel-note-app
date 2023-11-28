@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Requests\NoteRequest;
 use App\Http\Resources\NoteResource;
 use App\Jobs\SendEmailJob;
 use App\Models\Field;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use PhpParser\Builder;
 
 
 class NoteService
@@ -65,18 +67,17 @@ class NoteService
 
     /** Обновление заметки.
      *
-     * @param array $data принимает массив с полями для редактирования заметки.
-     * @return null
+     * @param Note $note
+     * @param NoteRequest $data
+     * @return Note|null
      */
-    public function update(array $data)
+    public function update(Note $note, NoteRequest $data): ?Note
     {
         DB::beginTransaction();
         try {
-            $user = Auth::user();
-            $note = Note::where('user_id', $user->id)
-                ->update([
-                    'title' => $data['title'],
-                ]);
+            $note->update([
+                'title' => $data['title'],
+            ]);
 
             foreach ($data['fields'] as $field) {
                 $existingField = Field::where('id', $field['id'])->first();
