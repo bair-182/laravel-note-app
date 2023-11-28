@@ -8,6 +8,89 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
+/**
+ * @OA\Post(
+ *       path="/api/register",
+ *       summary="Регистрация пользователя",
+ *       tags={"Auth"},
+ *
+ *       @OA\RequestBody(
+ *           @OA\JsonContent(
+ *               allOf={
+ *                   @OA\Schema (
+ *                       @OA\Property (property="name", type="string", example="Ivan_Ivanov"),
+ *                       @OA\Property (property="email", type="string", example="ivanov@mail.ru"),
+ *                       @OA\Property (property="password", type="string", example="12345678"),
+ *                   ),
+ *               }
+ *           ),
+ *       ),
+ *       @OA\Response(
+ *           response=200,
+ *           description="OK",
+ *           @OA\JsonContent(
+ *               @OA\Property (property="message", type="string", example="User created successfully."),
+ *               @OA\Property (property="user", type="object",
+ *                   @OA\Property (property="name", type="string", example="Ivan Ivanov"),
+ *                   @OA\Property (property="email", type="string", example="ivanov@mail.ru"),
+ *                   @OA\Property (property="updated_at", type="timestamp", example="2023-11-28T18:56:11.000000Z"),
+ *                   @OA\Property (property="created_at", type="timestamp", example="2023-11-28T18:56:11.000000Z"),
+ *                   @OA\Property (property="id", type="integer", example=1)
+ *               ),
+ *           ),
+ *       ),
+ *  ),
+ *
+ * @OA\Post(
+ *        path="/api/login",
+ *        summary="Авторизация пользователя(получение токена)",
+ *        tags={"Auth"},
+ *
+ *        @OA\RequestBody(
+ *            @OA\JsonContent(
+ *                allOf={
+ *                    @OA\Schema (
+ *                        @OA\Property (property="email", type="string", example="ivanov@mail.ru"),
+ *                        @OA\Property (property="password", type="string", example="12345678"),
+ *                    ),
+ *                }
+ *            ),
+ *        ),
+ *        @OA\Response(
+ *            response=200,
+ *            description="OK",
+ *            @OA\JsonContent(
+ *                @OA\Property (property="user", type="object",
+ *                    @OA\Property (property="id", type="integer", example=1),
+ *                    @OA\Property (property="name", type="string", example="Ivan Ivanov"),
+ *                    @OA\Property (property="email", type="string", example="ivanov@mail.ru"),
+ *                    @OA\Property (property="email_verified_at", type="timestamp", example=null),
+ *                    @OA\Property (property="created_at", type="timestamp", example="2023-11-28T18:56:11.000000Z"),
+ *                    @OA\Property (property="updated_at", type="timestamp", example="2023-11-28T18:56:11.000000Z"),
+ *                    @OA\Property (property="role", type="string", example="user"),
+ *                    @OA\Property (property="token", type="string", example="tWSGolP01gKzmIQVFP7fHe7s970wv7H6vvvYeeaDOE6dOmCXoqdzSImdV9s-_wJb4IrslyeNbxU4SFeiEhMS1TDpBfjjA6y1H7IuOGAvUgry1zmv1240gy--vmdikomjFKrXnylTKhbKBVFeZG5wbNkpGBrcLAtCTRpZ2oqmDOsLkvpp0Ed_WrClbFV9O4NuoQ"),
+ *                ),
+ *            ),
+ *        ),
+ *   ),
+ *
+ * @OA\Post(
+ *         path="/api/logout",
+ *         summary="Выйти из системы",
+ *         tags={"Auth"},
+ *         security={{ "bearerAuth": {} }},
+ *
+ *         @OA\Response(
+ *             response=200,
+ *             description="OK",
+ *             @OA\JsonContent(
+ *                 @OA\Property (property="message", type="string", example="Successfully logged out"),
+ *             ),
+ *         ),
+ *    ),
+ *
+ */
+
 class AuthController extends Controller
 {
     public function __construct()

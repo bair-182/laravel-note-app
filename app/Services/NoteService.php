@@ -26,27 +26,32 @@ class NoteService
                 'title' => $data['title'],
                 'user_id' => Auth::user()->id
             ]);
-            foreach ($data['fields'] as $field) {
-                $newField = Field::create([
-                    'title' => $field['title'],
-                    'type' => $field['type'],
-                    'note_id' => $note->id
-                ]);
-                switch ($newField['type']) {
-                    case Field::TYPE_STRING:
-                        $newField->fieldString()->create(['value' => $field['value']]);
-                        break;
-                    case Field::TYPE_INTEGER:
-                        $newField->fieldInt()->create(['value' => $field['value']]);
-                        break;
-                    case Field::TYPE_FLOAT:
-                        $newField->fieldFloat()->create(['value' => $field['value']]);
-                        break;
-                    case Field::TYPE_BOOLEAN:
-                        $newField->fieldBool()->create(['value' => $field['value']]);
-                        break;
+
+            if (isset($data['fields'])) {
+                foreach ($data['fields'] as $field) {
+                    $newField = Field::create([
+                        'title' => $field['title'],
+                        'type' => $field['type'],
+                        'note_id' => $note->id
+                    ]);
+
+                    switch ($newField['type']) {
+                        case Field::TYPE_STRING:
+                            $newField->fieldString()->create(['value' => $field['value']]);
+                            break;
+                        case Field::TYPE_INTEGER:
+                            $newField->fieldInt()->create(['value' => $field['value']]);
+                            break;
+                        case Field::TYPE_FLOAT:
+                            $newField->fieldFloat()->create(['value' => $field['value']]);
+                            break;
+                        case Field::TYPE_BOOLEAN:
+                            $newField->fieldBool()->create(['value' => $field['value']]);
+                            break;
+                    }
                 }
             }
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
@@ -73,27 +78,29 @@ class NoteService
                 'title' => $data['title'],
             ]);
 
-            foreach ($data['fields'] as $field) {
-                $existingField = Field::where('id', $field['id'])->first();
-                $existingField->update(['title' => $field['title']]);
+            if (isset($data['fields'])) {
+                foreach ($data['fields'] as $field) {
+                    $existingField = Field::where('id', $field['id'])->first();
+                    $existingField->update(['title' => $field['title']]);
 
-                switch ($existingField['type']) {
-                    case Field::TYPE_STRING:
-                        $existingField->fieldString()->update(
-                            ['value' => $field['value']]);
-                        break;
-                    case Field::TYPE_INTEGER:
-                        $existingField->fieldInt()->update(
-                            ['value' => $field['value']]);
-                        break;
-                    case Field::TYPE_FLOAT:
-                        $existingField->fieldFloat()->update(
-                            ['value' => $field['value']]);
-                        break;
-                    case Field::TYPE_BOOLEAN:
-                        $existingField->fieldBool()->update(
-                            ['value' => $field['value']]);
-                        break;
+                    switch ($existingField['type']) {
+                        case Field::TYPE_STRING:
+                            $existingField->fieldString()->update(
+                                ['value' => $field['value']]);
+                            break;
+                        case Field::TYPE_INTEGER:
+                            $existingField->fieldInt()->update(
+                                ['value' => $field['value']]);
+                            break;
+                        case Field::TYPE_FLOAT:
+                            $existingField->fieldFloat()->update(
+                                ['value' => $field['value']]);
+                            break;
+                        case Field::TYPE_BOOLEAN:
+                            $existingField->fieldBool()->update(
+                                ['value' => $field['value']]);
+                            break;
+                    }
                 }
             }
             DB::commit();

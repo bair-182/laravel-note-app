@@ -11,56 +11,134 @@ use App\Services\NoteService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ *
+ * @OA\Post(
+ *       path="/api/notes/",
+ *       summary="Создание заметки",
+ *       tags={"Note"},
+ *       security={{ "bearerAuth": {} }},
+ *
+ *       @OA\RequestBody(
+ *           @OA\JsonContent(
+ *               allOf={
+ *                   @OA\Schema (
+ *                       @OA\Property (property="title", type="string", example="Work"),
+ *                       @OA\Property (property="fields", type="array", @OA\Items(
+ *                           @OA\Property (property="title", type="string", example="Worker"),
+ *                           @OA\Property (property="type", type="string", example="string"),
+ *                           @OA\Property (property="value", type="string", example="Ivan Ivanov"),
+ *                       )),
+ *                   ),
+ *               }
+ *           ),
+ *       ),
+ *       @OA\Response(
+ *           response=200,
+ *           description="OK",
+ *           @OA\JsonContent(
+ *               @OA\Property (property="data", type="object",
+ *                   @OA\Property (property="title", type="string", example="Some title"),
+ *                   @OA\Property (property="user_id", type="integer", example=1),
+ *                   @OA\Property (property="id", type="integer", example=1),
+ *               ),
+ *               @OA\Property (property="message", type="string", example="New note created."),
+ *           ),
+ *       ),
+ *  )
+ *
+ * @OA\Get(
+ *       path="/api/notes/",
+ *       summary="Получение заметок",
+ *       tags={"Note"},
+ *       security={{ "bearerAuth": {} }},
+ *
+ *       @OA\Response(
+ *           response=200,
+ *           description="OK",
+ *           @OA\JsonContent(
+ *               @OA\Property (property="data", type="object",
+ *                   @OA\Property (property="title", type="string", example="Some title"),
+ *                   @OA\Property (property="user_id", type="integer", example=1),
+ *                   @OA\Property (property="id", type="integer", example=1),
+ *               ),
+ *           ),
+ *       ),
+ *  )
+ *
+ * @OA\Put(
+ *        path="/api/notes/{id}",
+ *        summary="Редактирование заметки",
+ *        tags={"Note"},
+ *        security={{ "bearerAuth": {} }},
+ *        @OA\Parameter (
+ *            description="ID заметки",
+ *            in="path",
+ *            name="id",
+ *            required=true,
+ *            example=1
+ *        ),
+ *
+ *       @OA\RequestBody(
+ *            @OA\JsonContent(
+ *                allOf={
+ *                    @OA\Schema (
+ *                        @OA\Property (property="title", type="string", example="Work"),
+ *                        @OA\Property (property="fields", type="array", @OA\Items(
+ *                            @OA\Property (property="id", type="integer", example=1),
+ *                            @OA\Property (property="title", type="string", example="Worker"),
+ *                            @OA\Property (property="type", type="string", example="string"),
+ *                            @OA\Property (property="value", type="string", example="Ivan Ivanov"),
+ *                        )),
+ *                    ),
+ *                }
+ *            ),
+ *        ),
+ *
+ *        @OA\Response(
+ *            response=200,
+ *            description="OK",
+ *            @OA\JsonContent(
+ *                @OA\Property (property="data", type="object",
+ *                    @OA\Property (property="title", type="string", example="Some title"),
+ *                    @OA\Property (property="user_id", type="integer", example=1),
+ *                    @OA\Property (property="id", type="integer", example=1),
+ *                ),
+ *            ),
+ *        ),
+ *   )
+ *
+ * @OA\Delete(
+ *         path="/api/notes/{id}",
+ *         summary="Удаление заметки",
+ *         tags={"Note"},
+ *         security={{ "bearerAuth": {} }},
+ *         @OA\Parameter (
+ *             description="ID заметки",
+ *             in="path",
+ *             name="id",
+ *             required=true,
+ *             example=1
+ *         ),
+ *
+ *         @OA\Response(
+ *             response=200,
+ *             description="OK",
+ *             @OA\JsonContent(
+ *                 @OA\Property (property="message", type="string", example="Note is deleted."),
+ *             ),
+ *         ),
+ *    )
+ *
+ */
 
 class NoteController extends Controller
 {
-
-    /** Просмотр заметок.
+    /**
      *
-     * Каждый пользователь имеет доступ только к своим заметкам. Администратор – ко всем
      *
-     * @return JsonResponse
-     */
-    public function index(): JsonResponse
-    {
-        if (!Auth::check()) {
-            return response()->json(['message' => 'Not authorized'], 401);
-        }
-
-        $user = Auth::user();
-        if (Auth::user()->role === User::ROLE_ADMIN) {
-            $data = NoteResource::collection(Note::with(
-                'fields.fieldString',
-                'fields.fieldInt',
-                'fields.fieldFloat',
-                'fields.fieldBool')
-                ->orderBy('id', 'DESC')
-                ->get()
-            );
-        } elseif (Auth::user()->role === User::ROLE_USER) {
-            $data = NoteResource::collection(Note::where('user_id', $user->id)
-                ->with(
-                    'fields.fieldString',
-                    'fields.fieldInt',
-                    'fields.fieldFloat',
-                    'fields.fieldBool')
-                ->orderBy('id', 'DESC')
-                ->get()
-
-            );
-        }
-        return response()->json(['data' => $data], 200);
-    }
-
-
-    /** Создание заметки.
      *
-     * При создании заметки пользователем создается событие, которое
-     * асинхронно отправляет уведомление администратору по почте
      *
-     * @param NoteRequest $request
-     * @param NoteService $noteService
-     * @return JsonResponse
      */
     public function store(NoteRequest $request, NoteService $noteService): JsonResponse
     {
@@ -72,6 +150,46 @@ class NoteController extends Controller
         }
         return response()->json(['error' => 'Failed to create a note.'], 500);
     }
+
+
+    /**
+     *
+     *
+     *
+     *
+     */
+    public function index(): JsonResponse
+    {
+        if (!Auth::check()) {
+            return response()->json(['message' => 'Not authorized'], 401);
+        }
+
+        $user = Auth::user();
+        if ($user->role === User::ROLE_ADMIN) {
+            $data = NoteResource::collection(Note::with(
+                'fields.fieldString',
+                'fields.fieldInt',
+                'fields.fieldFloat',
+                'fields.fieldBool')
+                ->orderBy('id', 'DESC')
+                ->get()
+            );
+        } else {
+            $data = NoteResource::collection(Note::where('user_id', $user->id)
+                ->with(
+                    'fields.fieldString',
+                    'fields.fieldInt',
+                    'fields.fieldFloat',
+                    'fields.fieldBool')
+                ->orderBy('id', 'DESC')
+                ->get()
+            );
+        }
+        return response()->json(['data' => $data], 200);
+    }
+
+
+
 
 
     /** Обновление заметки
