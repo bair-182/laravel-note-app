@@ -244,7 +244,7 @@
                 "tags": [
                     "Note"
                 ],
-                "summary": "Создание заметки с полями",
+                "summary": "Создание заметки",
                 "requestBody": {
                     "content": {
                         "application/json": {
