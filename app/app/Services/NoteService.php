@@ -83,19 +83,19 @@ class NoteService
                 $existingField->update(['title' => $field['title']]);
 
                 switch ($existingField['type']) {
-                    case 'string':
+                    case Field::TYPE_STRING:
                         $existingField->fieldString()->update(
                             ['value' => $field['value']]);
                         break;
-                    case 'integer':
+                    case Field::TYPE_INTEGER:
                         $existingField->fieldInt()->update(
                             ['value' => $field['value']]);
                         break;
-                    case 'float':
+                    case Field::TYPE_FLOAT:
                         $existingField->fieldFloat()->update(
                             ['value' => $field['value']]);
                         break;
-                    case 'boolean':
+                    case Field::TYPE_BOOLEAN:
                         $existingField->fieldBool()->update(
                             ['value' => $field['value']]);
                         break;

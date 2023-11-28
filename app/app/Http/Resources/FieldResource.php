@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Field;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -31,16 +32,16 @@ class FieldResource extends JsonResource
         ];
 
         switch ($this->type){
-            case Config::get('constants.type.STRING'):
+            case Field::TYPE_STRING:
                 $arrayData['value'] = $this->fieldString->value ?? null;
                 break;
-            case Config::get('constants.type.INTEGER'):
+            case Field::TYPE_INTEGER:
                 $arrayData['value'] = $this->fieldInt->value ?? null;
                 break;
-            case Config::get('constants.type.FLOAT'):
+            case Field::TYPE_FLOAT:
                 $arrayData['value'] = $this->fieldFloat->value ?? null;
                 break;
-            case Config::get('constants.type.BOOLEAN'):
+            case Field::TYPE_BOOLEAN:
                 $arrayData['value'] = $this->fieldBool->value ?? null;
                 break;
         }
