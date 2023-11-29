@@ -13,132 +13,48 @@ use Illuminate\Support\Facades\Auth;
 
 /**
  *
- * @OA\Post(
- *       path="/api/notes/",
- *       summary="Создание заметки",
- *       tags={"Note"},
- *       security={{ "bearerAuth": {} }},
  *
- *       @OA\RequestBody(
- *           @OA\JsonContent(
- *               allOf={
- *                   @OA\Schema (
- *                       @OA\Property (property="title", type="string", example="Work"),
- *                       @OA\Property (property="fields", type="array", @OA\Items(
- *                           @OA\Property (property="title", type="string", example="Worker"),
- *                           @OA\Property (property="type", type="string", example="string"),
- *                           @OA\Property (property="value", type="string", example="Ivan Ivanov"),
- *                       )),
- *                   ),
- *               }
- *           ),
- *       ),
- *       @OA\Response(
- *           response=200,
- *           description="OK",
- *           @OA\JsonContent(
- *               @OA\Property (property="data", type="object",
- *                   @OA\Property (property="title", type="string", example="Some title"),
- *                   @OA\Property (property="user_id", type="integer", example=1),
- *                   @OA\Property (property="id", type="integer", example=1),
- *               ),
- *               @OA\Property (property="message", type="string", example="New note created."),
- *           ),
- *       ),
- *  )
  *
- * @OA\Get(
- *       path="/api/notes/",
- *       summary="Получение заметок",
- *       tags={"Note"},
- *       security={{ "bearerAuth": {} }},
  *
- *       @OA\Response(
- *           response=200,
- *           description="OK",
- *           @OA\JsonContent(
- *               @OA\Property (property="data", type="object",
- *                   @OA\Property (property="title", type="string", example="Some title"),
- *                   @OA\Property (property="user_id", type="integer", example=1),
- *                   @OA\Property (property="id", type="integer", example=1),
- *               ),
- *           ),
- *       ),
- *  )
- *
- * @OA\Put(
- *        path="/api/notes/{id}",
- *        summary="Редактирование заметки",
- *        tags={"Note"},
- *        security={{ "bearerAuth": {} }},
- *        @OA\Parameter (
- *            description="ID заметки",
- *            in="path",
- *            name="id",
- *            required=true,
- *            example=1
- *        ),
- *
- *       @OA\RequestBody(
- *            @OA\JsonContent(
- *                allOf={
- *                    @OA\Schema (
- *                        @OA\Property (property="title", type="string", example="Work"),
- *                        @OA\Property (property="fields", type="array", @OA\Items(
- *                            @OA\Property (property="id", type="integer", example=1),
- *                            @OA\Property (property="title", type="string", example="Worker"),
- *                            @OA\Property (property="type", type="string", example="string"),
- *                            @OA\Property (property="value", type="string", example="Ivan Ivanov"),
- *                        )),
- *                    ),
- *                }
- *            ),
- *        ),
- *
- *        @OA\Response(
- *            response=200,
- *            description="OK",
- *            @OA\JsonContent(
- *                @OA\Property (property="data", type="object",
- *                    @OA\Property (property="title", type="string", example="Some title"),
- *                    @OA\Property (property="user_id", type="integer", example=1),
- *                    @OA\Property (property="id", type="integer", example=1),
- *                ),
- *            ),
- *        ),
- *   )
- *
- * @OA\Delete(
- *         path="/api/notes/{id}",
- *         summary="Удаление заметки",
- *         tags={"Note"},
- *         security={{ "bearerAuth": {} }},
- *         @OA\Parameter (
- *             description="ID заметки",
- *             in="path",
- *             name="id",
- *             required=true,
- *             example=1
- *         ),
- *
- *         @OA\Response(
- *             response=200,
- *             description="OK",
- *             @OA\JsonContent(
- *                 @OA\Property (property="message", type="string", example="Note is deleted."),
- *             ),
- *         ),
- *    )
  *
  */
 
 class NoteController extends Controller
 {
     /**
+     * @OA\Post(
+     *        path="/api/notes/",
+     *        summary="Создание заметки",
+     *        tags={"Note"},
+     *        security={{ "bearerAuth": {} }},
      *
-     *
-     *
-     *
+     *        @OA\RequestBody(
+     *            @OA\JsonContent(
+     *                allOf={
+     *                    @OA\Schema (
+     *                        @OA\Property (property="title", type="string", example="Work"),
+     *                        @OA\Property (property="fields", type="array", @OA\Items(
+     *                            @OA\Property (property="title", type="string", example="Worker"),
+     *                            @OA\Property (property="type", type="string", example="string"),
+     *                            @OA\Property (property="value", type="string", example="Ivan Ivanov"),
+     *                        )),
+     *                    ),
+     *                }
+     *            ),
+     *        ),
+     *        @OA\Response(
+     *            response=200,
+     *            description="OK",
+     *            @OA\JsonContent(
+     *                @OA\Property (property="data", type="object",
+     *                    @OA\Property (property="title", type="string", example="Some title"),
+     *                    @OA\Property (property="user_id", type="integer", example=1),
+     *                    @OA\Property (property="id", type="integer", example=1),
+     *                ),
+     *                @OA\Property (property="message", type="string", example="New note created."),
+     *            ),
+     *        ),
+     *   )
      */
     public function store(NoteRequest $request, NoteService $noteService): JsonResponse
     {
@@ -153,10 +69,24 @@ class NoteController extends Controller
 
 
     /**
+     * @OA\Get(
+     *        path="/api/notes/",
+     *        summary="Получение заметок",
+     *        tags={"Note"},
+     *        security={{ "bearerAuth": {} }},
      *
-     *
-     *
-     *
+     *        @OA\Response(
+     *            response=200,
+     *            description="OK",
+     *            @OA\JsonContent(
+     *                @OA\Property (property="data", type="object",
+     *                    @OA\Property (property="title", type="string", example="Some title"),
+     *                    @OA\Property (property="user_id", type="integer", example=1),
+     *                    @OA\Property (property="id", type="integer", example=1),
+     *                ),
+     *            ),
+     *        ),
+     *   )
      */
     public function index(): JsonResponse
     {
@@ -189,15 +119,48 @@ class NoteController extends Controller
     }
 
 
-
-
-
-    /** Обновление заметки
+    /**
+     * @OA\Put(
+     *         path="/api/notes/{id}",
+     *         summary="Редактирование заметки",
+     *         tags={"Note"},
+     *         security={{ "bearerAuth": {} }},
+     *         @OA\Parameter (
+     *             description="ID заметки",
+     *             in="path",
+     *             name="id",
+     *             required=true,
+     *             example=1
+     *         ),
      *
-     * @param NoteRequest $request
-     * @param int $noteId
-     * @param NoteService $noteService
-     * @return JsonResponse
+     *        @OA\RequestBody(
+     *             @OA\JsonContent(
+     *                 allOf={
+     *                     @OA\Schema (
+     *                         @OA\Property (property="title", type="string", example="Work"),
+     *                         @OA\Property (property="fields", type="array", @OA\Items(
+     *                             @OA\Property (property="id", type="integer", example=1),
+     *                             @OA\Property (property="title", type="string", example="Worker"),
+     *                             @OA\Property (property="type", type="string", example="string"),
+     *                             @OA\Property (property="value", type="string", example="Ivan Ivanov"),
+     *                         )),
+     *                     ),
+     *                 }
+     *             ),
+     *         ),
+     *
+     *         @OA\Response(
+     *             response=200,
+     *             description="OK",
+     *             @OA\JsonContent(
+     *                 @OA\Property (property="data", type="object",
+     *                     @OA\Property (property="title", type="string", example="Some title"),
+     *                     @OA\Property (property="user_id", type="integer", example=1),
+     *                     @OA\Property (property="id", type="integer", example=1),
+     *                 ),
+     *             ),
+     *         ),
+     *    )
      */
     public function update(NoteRequest $request, int $noteId, NoteService $noteService): JsonResponse
     {
@@ -217,10 +180,28 @@ class NoteController extends Controller
     }
 
 
-    /** Удаление заметки.
+    /**
+     * @OA\Delete(
+     *          path="/api/notes/{id}",
+     *          summary="Удаление заметки",
+     *          tags={"Note"},
+     *          security={{ "bearerAuth": {} }},
+     *          @OA\Parameter (
+     *              description="ID заметки",
+     *              in="path",
+     *              name="id",
+     *              required=true,
+     *              example=1
+     *          ),
      *
-     * @param int $noteId
-     * @return JsonResponse
+     *          @OA\Response(
+     *              response=200,
+     *              description="OK",
+     *              @OA\JsonContent(
+     *                  @OA\Property (property="message", type="string", example="Note is deleted."),
+     *              ),
+     *          ),
+     *     )
      */
     public function delete(int $noteId): JsonResponse
     {
