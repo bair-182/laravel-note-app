@@ -216,6 +216,18 @@
                                     "properties": {
                                         "data": {
                                             "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "created_at": {
+                                                    "type": "timestamp",
+                                                    "example": "2023-11-28 17:50:37"
+                                                },
+                                                "updated_at": {
+                                                    "type": "timestamp",
+                                                    "example": null
+                                                },
                                                 "title": {
                                                     "type": "string",
                                                     "example": "Some title"
@@ -224,9 +236,37 @@
                                                     "type": "integer",
                                                     "example": 1
                                                 },
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 1
+                                                "fields": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "created_at": {
+                                                                "type": "timestamp",
+                                                                "example": "2023-11-28 17:50:37"
+                                                            },
+                                                            "updated_at": {
+                                                                "type": "timestamp",
+                                                                "example": null
+                                                            },
+                                                            "title": {
+                                                                "type": "string",
+                                                                "example": "Worker"
+                                                            },
+                                                            "type": {
+                                                                "type": "enum('string', 'integer', 'float', 'boolean')",
+                                                                "example": "string"
+                                                            },
+                                                            "value": {
+                                                                "type": "string",
+                                                                "example": "Ivan Ivanov"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
                                                 }
                                             },
                                             "type": "object"
@@ -270,7 +310,7 @@
                                                             "example": "Worker"
                                                         },
                                                         "type": {
-                                                            "type": "string",
+                                                            "type": "enum('string', 'integer', 'float', 'boolean')",
                                                             "example": "string"
                                                         },
                                                         "value": {
@@ -397,22 +437,9 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "data": {
-                                            "properties": {
-                                                "title": {
-                                                    "type": "string",
-                                                    "example": "Some title"
-                                                },
-                                                "user_id": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                }
-                                            },
-                                            "type": "object"
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Note is updated."
                                         }
                                     },
                                     "type": "object"

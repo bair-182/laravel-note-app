@@ -35,7 +35,7 @@ class NoteController extends Controller
      *                        @OA\Property (property="title", type="string", example="Work"),
      *                        @OA\Property (property="fields", type="array", @OA\Items(
      *                            @OA\Property (property="title", type="string", example="Worker"),
-     *                            @OA\Property (property="type", type="string", example="string"),
+     *                            @OA\Property (property="type", type="enum('string', 'integer', 'float', 'boolean')", example="string"),
      *                            @OA\Property (property="value", type="string", example="Ivan Ivanov"),
      *                        )),
      *                    ),
@@ -80,9 +80,19 @@ class NoteController extends Controller
      *            description="OK",
      *            @OA\JsonContent(
      *                @OA\Property (property="data", type="object",
+     *                    @OA\Property (property="id", type="integer", example=1),
+     *                    @OA\Property (property="created_at", type="timestamp", example="2023-11-28 17:50:37"),
+     *                    @OA\Property (property="updated_at", type="timestamp", example=null),
      *                    @OA\Property (property="title", type="string", example="Some title"),
      *                    @OA\Property (property="user_id", type="integer", example=1),
-     *                    @OA\Property (property="id", type="integer", example=1),
+     *                    @OA\Property (property="fields", type="array", @OA\Items(
+     *                              @OA\Property (property="id", type="integer", example=1),
+     *                              @OA\Property (property="created_at", type="timestamp", example="2023-11-28 17:50:37"),
+     *                              @OA\Property (property="updated_at", type="timestamp", example=null),
+     *                              @OA\Property (property="title", type="string", example="Worker"),
+     *                              @OA\Property (property="type", type="enum('string', 'integer', 'float', 'boolean')", example="string"),
+     *                              @OA\Property (property="value", type="string", example="Ivan Ivanov"),
+     *                          )),
      *                ),
      *            ),
      *        ),
@@ -153,11 +163,7 @@ class NoteController extends Controller
      *             response=200,
      *             description="OK",
      *             @OA\JsonContent(
-     *                 @OA\Property (property="data", type="object",
-     *                     @OA\Property (property="title", type="string", example="Some title"),
-     *                     @OA\Property (property="user_id", type="integer", example=1),
-     *                     @OA\Property (property="id", type="integer", example=1),
-     *                 ),
+     *                 @OA\Property (property="message", type="string", example="Note is updated."),
      *             ),
      *         ),
      *    )
