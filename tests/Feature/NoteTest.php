@@ -24,7 +24,4 @@ class NoteTest extends TestCase
         $res = $this->post('/api/register', $data);
         $res->assertOk();
     }
-
-
-
 }
