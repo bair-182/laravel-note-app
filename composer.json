@@ -29,7 +29,12 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "classmap": [
+            "tests/TestCase.php",
+            "tests/PassportTestCase.php",
+            "tests/PassportTest.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

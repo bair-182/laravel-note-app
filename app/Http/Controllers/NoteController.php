@@ -11,14 +11,6 @@ use App\Services\NoteService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
-/**
- *
- *
- *
- *
- *
- */
-
 class NoteController extends Controller
 {
     /**
@@ -219,7 +211,7 @@ class NoteController extends Controller
             return response()->json(['error' => 'There are not enough rights to delete this note.'], 403);
         }
         $note->delete();
-        return response()->json(['message' => 'Note is deleted.'], 201);
+        return response()->json(['message' => 'Note is deleted.'], 200);
     }
 
 }

@@ -105,7 +105,7 @@
                                         "properties": {
                                             "name": {
                                                 "type": "string",
-                                                "example": "Ivan_Ivanov"
+                                                "example": "Ivan Ivanov"
                                             },
                                             "email": {
                                                 "type": "string",

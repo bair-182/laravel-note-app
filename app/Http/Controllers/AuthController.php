@@ -7,12 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-/**
- *
- *
- *
- */
-
 class AuthController extends Controller
 {
     public function __construct()
@@ -84,7 +78,7 @@ class AuthController extends Controller
      *            @OA\JsonContent(
      *                allOf={
      *                    @OA\Schema (
-     *                        @OA\Property (property="name", type="string", example="Ivan_Ivanov"),
+     *                        @OA\Property (property="name", type="string", example="Ivan Ivanov"),
      *                        @OA\Property (property="email", type="string", example="ivanov@mail.ru"),
      *                        @OA\Property (property="password", type="string", example="12345678"),
      *                    ),
